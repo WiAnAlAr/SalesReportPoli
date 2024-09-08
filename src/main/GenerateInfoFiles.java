@@ -10,13 +10,14 @@ import java.util.List;
 import java.util.Random;
 
 public class GenerateInfoFiles {
-	static List<String> docTypes = Arrays.asList("Cedula", "Pasaporte", "Cedula Extranjeria");
-	static List<String> names = Arrays.asList("Pepe", "Pedro", "Juan", "Luis", "Carlos", "José", "Miguel", "Andrés", "Diego", "Antonio", "Manuel", "Javier", "Fernando", "Ricardo", "Alejandro", "Hugo", "Martín", "Daniel", "Santiago", "Pablo");
-	static List<String> lastNames = Arrays.asList("García", "Martínez", "Rodríguez", "López", "Hernández", "Pérez", "Sánchez", "Ramírez", "Torres", "Flores", "González", "Fernández", "Castro", "Vargas", "Morales", "Reyes", "Mendoza", "Romero", "Díaz", "Cruz");
-	static List<String> products = Arrays.asList("Televisor", "Teléfono móvil", "Laptop", "Cámara fotográfica", "Auriculares", "Reloj inteligente", "Tablet", "Teclado mecánico", "Consola de videojuegos", "Impresora"
-);
-	static List<String> documents = new ArrayList<>();
-	static Random random = new Random();
+	//se las variables necesarios para la creacion de los archivos
+	static List<String> docTypes = Arrays.asList("Cedula", "Pasaporte", "Cedula Extranjeria");//lista de tipos de documento
+	static List<String> names = Arrays.asList("Pepe", "Pedro", "Juan", "Luis", "Carlos", "José", "Miguel", "Andrés", "Diego", "Antonio", "Manuel", "Javier", "Fernando", "Ricardo", "Alejandro", "Hugo", "Martín", "Daniel", "Santiago", "Pablo");//lista de nombres
+	static List<String> lastNames = Arrays.asList("García", "Martínez", "Rodríguez", "López", "Hernández", "Pérez", "Sánchez", "Ramírez", "Torres", "Flores", "González", "Fernández", "Castro", "Vargas", "Morales", "Reyes", "Mendoza", "Romero", "Díaz", "Cruz"); //lista de apellidos
+	static List<String> products = Arrays.asList("Televisor", "Teléfono móvil", "Laptop", "Cámara fotográfica", "Auriculares", "Reloj inteligente", "Tablet", "Teclado mecánico", "Consola de videojuegos", "Impresora");//lista de productos
+	static List<String> documents = new ArrayList<>();//lista para almacenar los documentos de los vendedores
+	static Random random = new Random();// clase para seleccionar numeros aleatorios
+	//clase constuctora en la que se llamaran los metodos para la eliminancion y la creacion de los archivos necesarios
 	public GenerateInfoFiles() {
 		deletTxtFiles();
 		for(int i = 0; i < random.nextInt(10) + 1; i++) {
@@ -25,7 +26,7 @@ public class GenerateInfoFiles {
 		createSellersFile();
 		createProductsFile();
 	}
-	
+	//metodo para la creacion de archivos genericos
 	private void createFile(String fileName, List<String> content) {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(fileName + ".txt"));
@@ -39,7 +40,7 @@ public class GenerateInfoFiles {
         }
         System.out.println(fileName + ".txt" + " has been created.");
     }
-	
+	//metodo para la eliminancion de archivos .txt
 	private void deletTxtFiles() {
         String projectDirectoryPath = System.getProperty("user.dir");
         File directory = new File(projectDirectoryPath);
@@ -58,7 +59,7 @@ public class GenerateInfoFiles {
             System.out.println(projectDirectoryPath + " is not a directory or does not exist.");
         }        
     }
-	
+	//metodo para la creacion de registros de numero de documento y tipo de documento
 	public String createSalerDocTypeDocNum() {                
         String document = docTypes.get(random.nextInt(docTypes.size()));
         
@@ -67,13 +68,13 @@ public class GenerateInfoFiles {
         documents.add(documentInfo);
         return documentInfo;
     }
-	
+	//metodo para crear los registros de productos vendidos por un vendedor
 	public String createSaleRecord() {		
         int randomProductId = random.nextInt(10) + 1;
         int randomQuantitySold = random.nextInt(5) + 1;
         return randomProductId + ";" + randomQuantitySold;
 	}
-	
+	//metodo para la creacion del archivos de las ventas realizadas por un vendedor
 	public void createSalesBySellerFile(int Amount){
 		String seller = createSalerDocTypeDocNum();
 		List<String> records =  new ArrayList<>();
@@ -84,7 +85,7 @@ public class GenerateInfoFiles {
 		}				
 		createFile("Saler" + Amount, records);
 	}
-	
+	//metodo para la generacion de nombres y apellidos
 	public String createSellerNamesAndLastNames() {		
         int indexName1 = random.nextInt(names.size());
         int indexName2 = random.nextInt(names.size());        
@@ -98,7 +99,7 @@ public class GenerateInfoFiles {
         }
         return String.join(" ", names.get(indexName1), names.get(indexName2)+";", lastNames.get(indexLastName1), lastNames.get(indexLastName2));
 	}
-	
+	//metodo para la creacion del archivo que contiene la informacion de vendedores
 	public void createSellersFile() {
 		List<String> records =  new ArrayList<>();
 		for(String Item: documents)
@@ -107,7 +108,7 @@ public class GenerateInfoFiles {
 		}
 		createFile("Sellers", records);
 	}
-	
+	//metodo para la creacion del archivo que contiene la informacion de los productos
 	public void createProductsFile() {
 		List<String> records =  new ArrayList<>();
 		int i = 1;
