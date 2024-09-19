@@ -27,7 +27,7 @@ public class GenerateInfoFiles {
 		createProductsFile();
 	}
 	//metodo para la creacion de archivos genericos
-	private void createFile(String fileName, List<String> content) {
+	public void createFile(String fileName, List<String> content) {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(fileName + ".txt"));
             for (String line : content) {
@@ -60,7 +60,7 @@ public class GenerateInfoFiles {
         }        
     }
 	//metodo para la creacion de registros de numero de documento y tipo de documento
-	public String createSalerDocTypeDocNum() {                
+	private String createSalerDocTypeDocNum() {                
         String document = docTypes.get(random.nextInt(docTypes.size()));
         
         int randomNumber = random.nextInt(1000000000) + 1000000000;
@@ -69,13 +69,13 @@ public class GenerateInfoFiles {
         return documentInfo;
     }
 	//metodo para crear los registros de productos vendidos por un vendedor
-	public String createSaleRecord() {		
+	private String createSaleRecord() {		
         int randomProductId = random.nextInt(10) + 1;
         int randomQuantitySold = random.nextInt(5) + 1;
         return randomProductId + ";" + randomQuantitySold;
 	}
 	//metodo para la creacion del archivos de las ventas realizadas por un vendedor
-	public void createSalesBySellerFile(int Amount){
+	private void createSalesBySellerFile(int Amount){
 		String seller = createSalerDocTypeDocNum();
 		List<String> records =  new ArrayList<>();
 		records.add(seller);
@@ -86,7 +86,7 @@ public class GenerateInfoFiles {
 		createFile("Saler" + Amount, records);
 	}
 	//metodo para la generacion de nombres y apellidos
-	public String createSellerNamesAndLastNames() {		
+	private String createSellerNamesAndLastNames() {		
         int indexName1 = random.nextInt(names.size());
         int indexName2 = random.nextInt(names.size());        
         while (indexName1 == indexName2) {
@@ -100,7 +100,7 @@ public class GenerateInfoFiles {
         return String.join(" ", names.get(indexName1), names.get(indexName2)+";", lastNames.get(indexLastName1), lastNames.get(indexLastName2));
 	}
 	//metodo para la creacion del archivo que contiene la informacion de vendedores
-	public void createSellersFile() {
+	private void createSellersFile() {
 		List<String> records =  new ArrayList<>();
 		for(String Item: documents)
 		{
@@ -109,7 +109,7 @@ public class GenerateInfoFiles {
 		createFile("Sellers", records);
 	}
 	//metodo para la creacion del archivo que contiene la informacion de los productos
-	public void createProductsFile() {
+	private void createProductsFile() {
 		List<String> records =  new ArrayList<>();
 		int i = 1;
 		for(String Item: products) {
