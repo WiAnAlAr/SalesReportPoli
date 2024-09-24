@@ -7,45 +7,48 @@ import java.util.stream.*;
 
 public class main {
 	
+	//instanciacion de la clase GenerateInfoFiles para generar los archivos necesarios
 	static GenerateInfoFiles createFiles = new GenerateInfoFiles();
 	
+	//metodo para la lectura de los archivos de las ventas realizadas por un vendedor
 	public static Map<String, List<String>> readSalerFiles() throws IOException {
-		Map<String, List<String>> vendedores = new HashMap<>();
+		Map<String, List<String>> sellers = new HashMap<>();
         try (Stream<Path> stream = Files.list(Paths.get("."))) {
             stream
                 .filter(path -> path.toString().endsWith(".txt") && path.toString().contains("Saler"))
                 .forEach(path -> {
-                    List<String> productos = new ArrayList<>();
-                    String vendedor = null;
+                    List<String> products = new ArrayList<>();
+                    String seller = null;
                     try (BufferedReader br = new BufferedReader(new FileReader(path.toFile()))) {
                         String line;
                         while ((line = br.readLine()) != null) {
-                            if (vendedor == null) {
-                                vendedor = line;
+                            if (seller == null) {
+                            	seller = line;
                             } else {
-                                productos.add(line);
+                            	products.add(line);
                             }
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    if (vendedor != null) {
-                        vendedores.put(vendedor, productos);
+                    if (seller != null) {
+                    	sellers.put(seller, products);
                     }
                 });
         }
-        return vendedores;
+        return sellers;
     }
 	
+	//metodo generico para leer los archivos de vendedores y productos
 	 public static List<String> genericFileReader(String fileName) throws IOException {
-	        List<String> sellers = new ArrayList<>();
+	        List<String> listInformation = new ArrayList<>();
 	        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
 	            String line;
 	            while ((line = br.readLine()) != null) {
-	                sellers.add(line);
+	            	listInformation.add(line);
 	            }
 	        }
-	        return sellers;
+	        return listInformation;
 	    }
 
 	public static void main(String[] args) throws IOException {	
