@@ -8,7 +8,7 @@ import java.util.stream.*;
 public class main {
 	
 	//instanciacion de la clase GenerateInfoFiles para generar los archivos necesarios
-	static GenerateInfoFiles createFiles = new GenerateInfoFiles();
+	static GenerateInfoFiles generateInfoFiles = new GenerateInfoFiles();
 	
 	//metodo para la lectura de los archivos de las ventas realizadas por un vendedor
 	public static Map<String, List<String>> readSalerFiles() throws IOException {
@@ -57,7 +57,14 @@ public class main {
 		List<String> products = genericFileReader("Products.txt");
 		Map<String, List<String>> salesInfo = readSalerFiles();
 		List<String> sellersReportList = new ArrayList<>();
-		System.out.println("Lista de vendedores:");
+		Map<String, String> productReportMap = new HashMap<>();
+		List<String> productReportList =  new ArrayList<>();
+		
+		for(String product: products) {
+			String[] productArray = product.split(";");
+			productReportMap.put(productArray[0], "0");
+		}
+		
 		for(String sellerInfo: sellers) {
 			int totalSales = 0;
 			String[] sellerInfoArray = sellerInfo.split(";");
@@ -66,9 +73,11 @@ public class main {
 					for (String saledProductInfo : entry.getValue()) {
 						String[] saledProductInfoArray = saledProductInfo.split(";");
 						for (String product: products) {
-							if(product.startsWith(saledProductInfoArray[0])) {
+							if(product.startsWith(saledProductInfoArray[0] + ";")) {
 								String[] productArray = product.split(";");
 								totalSales += Integer.parseInt(saledProductInfoArray[1]) * Integer.parseInt(productArray[2]);
+								int count = Integer.parseInt(productReportMap.get(saledProductInfoArray[0])) + Integer.parseInt(saledProductInfoArray[1]);
+								productReportMap.put(saledProductInfoArray[0], Integer.toString(count));
 							}
 						}								                
 		            }
@@ -83,8 +92,28 @@ public class main {
             int num2 = Integer.parseInt(secondElement[secondElement.length - 1]);
             return Integer.compare(num2, num1);
         });
+		System.out.println("Reporte de ventas por vendedor:");
 		for(String item: sellersReportList) {
 			System.out.println(item);
+		}
+		
+		Map<String, String> sortedProductReportMap = productReportMap.entrySet().stream()
+	            .sorted((e1, e2) -> Integer.compare(Integer.parseInt(e2.getValue()), Integer.parseInt(e1.getValue())))
+	            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+		
+		for (Map.Entry<String, String> entry : sortedProductReportMap.entrySet()) {
+			for(String product : products) {				
+				String[] productArray = product.split(";");				
+				if(entry.getKey().equals(productArray[0])) {
+					productReportList.add(productArray[1]+";"+productArray[2]+";");
+				}
+			}
 		}		
+		System.out.println("Reporte productos vendidos:");
+		System.out.println(productReportMap);
+		System.out.println(productReportList);
+		generateInfoFiles.createFile("SalesReport", sellersReportList);
+		generateInfoFiles.createFile("ProductReport", productReportList);
+				
 	}
 }
